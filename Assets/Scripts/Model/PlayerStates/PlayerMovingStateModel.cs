@@ -6,6 +6,10 @@ public class PlayerMovingStateModel : BasePlayerStateModel
     private Vector2 _movingVector2D;
     private float _magnitude;
 
+    private Quaternion _rotationTemp;
+    private Vector3 _translatePositionTemp;
+    private float _vectorSpeedMagnitude;
+
 
     public override void Execute(PlayerController controller, PlayerView player)
     {
@@ -19,11 +23,15 @@ public class PlayerMovingStateModel : BasePlayerStateModel
         _movingVector.x = _movingVector2D.x;
         _movingVector.z = _movingVector2D.y;
         _movingVector.y = 0;
+         
+        _rotationTemp = Quaternion.LookRotation(_movingVector, Vector3.up);
+        player.Rotation = _rotationTemp;
 
-        player.Rotation = Quaternion.LookRotation(_movingVector, Vector3.up);
+        _translatePositionTemp = Vector3.forward * _magnitude * 0.01f * player.MovementSpeed * Time.deltaTime;
+        player.Transform.Translate(_translatePositionTemp);
 
-        player.Transform.Translate(Vector3.forward * _magnitude * 0.01f * player.MovementSpeed * Time.deltaTime);
-
-        player.Animator.SetFloat("VectorSpeedMagnitude", _magnitude * 0.01f);
+        _vectorSpeedMagnitude = _magnitude * 0.01f;
+        player.Animator.SetFloat("VectorSpeedMagnitude", _vectorSpeedMagnitude);
+        GameEvents.Current.MoveConnectedEnemy(_rotationTemp, _translatePositionTemp, _magnitude);
     }
 }

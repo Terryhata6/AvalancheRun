@@ -9,7 +9,7 @@ public class PilaView : MonoBehaviour
     [SerializeField] private Transform _endPosition;
     [SerializeField] private float _speed = 5f;
     [SerializeField] private float _rotatingSpeed = 5f;
-    private bool _moveToEnd = true;
+    [SerializeField] private bool _moveToEnd = true;
 
     public void Awake()
     {
@@ -23,7 +23,7 @@ public class PilaView : MonoBehaviour
         if (_moveToEnd)
         {
             transform.position = Vector3.MoveTowards(transform.position, _endPosition.position, Time.deltaTime * _speed);
-            if (transform.position == _endPosition.position)
+            if ((transform.position - _endPosition.position).magnitude < 0.05f)
             {
                 _moveToEnd = false;
             }
@@ -31,7 +31,7 @@ public class PilaView : MonoBehaviour
         if (!_moveToEnd)
         {
             transform.position = Vector3.MoveTowards(transform.position, _startPosition.position, Time.deltaTime * _speed);
-            if (transform.position == _startPosition.position)
+            if ((transform.position - _startPosition.position).magnitude < 0.05f)
             {
                 _moveToEnd = true;
             }

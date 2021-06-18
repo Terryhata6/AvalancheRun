@@ -119,8 +119,13 @@ public class GameModeController : BaseController, IExecute
     }
 
     public void LoadLevel()
+    {        
+        LoadLevel($"{_levelNamePrefix}{_curretLevelIndex}");
+    }
+
+    public void LoadLevel(string levelName)
     {
-        LoadNewScene($"{_levelNamePrefix}{_curretLevelIndex}");
+        LoadNewScene(levelName);
     }
 
     private void LevelComplete()

@@ -12,5 +12,6 @@ public class EnemyIdleStateModel : BaseEnemyStateModel
         {
             _magnitude = 0;
         }
+        enemy.Animator.SetFloat("VectorSpeedMagnitude", _magnitude * 0.01f);
     }
 }

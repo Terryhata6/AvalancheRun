@@ -33,5 +33,6 @@ public class VirtualCameraView : MonoBehaviour
     private void OnDestroy()
     {
         GameEvents.Current.OnSettingActiveCamera -= SetActiveCamera;
+        
     }
 }

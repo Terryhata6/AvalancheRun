@@ -8,7 +8,7 @@ public class PlayerView : BaseObjectView
     [SerializeField, Range(3f, 10f)] private float _movementSpeed = 3.0f;  
     [SerializeField] private Animator _animator;
     [SerializeField] private Rigidbody _playerRigidbody;
-    [SerializeField] public GameObject _bombShield;
+    [SerializeField] private GameObject _bombShield;
     [SerializeField] private bool _bombShieldReady = true;
     [SerializeField] private bool _canSlowTime = true;
     [SerializeField] private float _slowModeDuration = 3.0f;
@@ -50,10 +50,23 @@ public class PlayerView : BaseObjectView
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Enemy"))
+        if (collision.gameObject.CompareTag(TagManager.Enemy))
         {
             GameEvents.Current.OnPlayerGetHit();
+            GameEvents.Current.PlayerHiterName(collision.gameObject.name);
             Invoke("LevelFail", 1f);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("ToHorizontalCam"))
+        {
+            GameEvents.Current.SetActiveCamera("HorizontalCamera");
+        }
+        if (other.gameObject.CompareTag("Member"))
+        {
+            GameEvents.Current.ConnectEnemy(other.GetComponent<EnemyView>());
         }
     }
 

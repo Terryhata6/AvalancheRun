@@ -5,5 +5,7 @@
     Allert,
     Dead,
     Moving,
-    Finishing
+    Finishing,
+    Connected,
+    MoveToConnect
 }

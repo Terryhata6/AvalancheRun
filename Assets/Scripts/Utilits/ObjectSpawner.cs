@@ -38,6 +38,7 @@ public class ObjectSpawner : MonoBehaviour
             }
         }
         StartCoroutine(Utilits.CreatingObjects(newObjects, spawnerView.transform, deltaTime)); 
+        
     }
 
     private void SetPosition(Vector3 position)

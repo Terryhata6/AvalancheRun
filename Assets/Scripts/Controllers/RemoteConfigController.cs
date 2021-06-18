@@ -7,7 +7,7 @@ public class RemoteConfigController : BaseController
 {
     private struct userAttrributes { } 
     private struct appAttributes { }
-
+    private bool _fetchCompleted = false;
     public RemoteConfigController(MainController main) : base(main)
     {
         
@@ -18,10 +18,12 @@ public class RemoteConfigController : BaseController
         base.Initialize();
         ConfigManager.FetchCompleted += UpdateConfigParameters;
         FetchConfigs();
+        
     }
 
     private void UpdateConfigParameters(ConfigResponse response)
     {
+        _fetchCompleted = true;
         //Debug.Log($"ConfigUpdated - {ConfigManager.appConfig.GetBool("OverallShowAdvertisement")}");
         bool showAdvertise = ConfigManager.appConfig.GetBool("OverallShowAdvertisement");
         if (showAdvertise)

@@ -7,13 +7,19 @@ using UnityEngine;
 public class CollectableView : BaseObjectView
 {
     [SerializeField] private int _value = 100;
+    [SerializeField] private bool _randomisePosition = true;
     private static CollectableController _controller;
 
 
     public void Start()
     {
-        transform.position = 
-            new Vector3(transform.position.x + Random.Range(-3f, 3f), transform.position.y, transform.position.z);
+        if (_randomisePosition)
+        {
+            transform.position =
+                new Vector3(transform.position.x + Random.Range(-3f, 3f), 
+                transform.position.y,
+                transform.position.z);
+        }
         FindMyController();
         GetComponent<Collider>().isTrigger = true;
 
@@ -25,9 +31,6 @@ public class CollectableView : BaseObjectView
         {
             GameEvents.Current.AddMoney(_value);
             Destroy(gameObject, 0f);
-#if UNITY_EDITOR
-            Debug.Log($"Added {_value} dollars ");
-#endif
         }
     }
 

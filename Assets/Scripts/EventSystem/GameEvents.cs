@@ -126,6 +126,12 @@ public class GameEvents : MonoBehaviour
         OnPlayerGetHit?.Invoke();
     }
 
+    public Action<string> OnPlayerHiterName;
+    public void PlayerHiterName(string gameObjectName)
+    {
+        OnPlayerHiterName?.Invoke(gameObjectName);
+    }
+
     /// <summary>
     /// Called When Object with Tag "Enemy" Collide with Player
     /// </summary>
@@ -152,13 +158,13 @@ public class GameEvents : MonoBehaviour
     {
         OnSelectSkin?.Invoke(skinName);
     }
-    #endregion
 
     public Action<bool> OnPlayerControllerSetActive;
     public void PlayerControllerSetActive(bool value)
     {
         OnPlayerControllerSetActive?.Invoke(value);
     }
+    #endregion
 
     #region Enemy events
     public Action<EnemyView> OnEnemyGetDamage;
@@ -177,6 +183,18 @@ public class GameEvents : MonoBehaviour
     public void MemberFinish(EnemyView enemy)
     {
         OnMemberFinish?.Invoke(enemy);
+    }
+
+    public Action<Quaternion,Vector3,float> OnMoveConnectedEnemy;
+    public void MoveConnectedEnemy(Quaternion rotation, Vector3 translatePosition, float vectorSpeedMagnitude)
+    {
+        OnMoveConnectedEnemy?.Invoke(rotation, translatePosition, vectorSpeedMagnitude);
+    }
+
+    public Action<EnemyView> OnConnectEnemy;
+    public void ConnectEnemy(EnemyView enemy)
+    {
+        OnConnectEnemy?.Invoke(enemy);
     }
     #endregion
 

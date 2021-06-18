@@ -6,16 +6,25 @@ using GameAnalyticsSDK;
 
 public class SDKController : BaseController
 {
+    #region IronSource
 
     private static bool isRewardAdvertismentEnbaled = false;
     public static bool IsRewardAdvertismentEnbaled => isRewardAdvertismentEnbaled; //Check this bool for understanding we are using Advertisement now
     public static IGetReward RewardInstance = null;
     private bool _isISInitialised = false; //base false
-    private string _ISIOSAppKey = null;
-    private string _ISAndroidAppKey = null;
+    private string _ISIOSAppKey = "f5a151b9";
+    private string _ISAndroidAppKey = "f5a151b9";
     private string _currentAppKey = null;
-    private SaveDataRepo _saveData;
+    private float _startTime;
+    #endregion
 
+    #region GAFields
+    private SaveDataRepo _saveData;
+    private int LevelNumber = -1;
+    private int LevelDifficulty = -1;
+    private int LevelOverall = -1;
+
+    #endregion
     private float _lastInterstitialTime;
     public SDKController(MainController main) : base(main)
     {
@@ -36,8 +45,6 @@ public class SDKController : BaseController
         GameEvents.Current.OnLevelFailed += OnLevelFailEvent;
         FacebookInitialize();
         GameAnalyticsInitialize();
-        
-
     }
     
     #region GameAnalytics
@@ -48,26 +55,24 @@ public class SDKController : BaseController
 
     private void OnLevelStartEvent()
     {
-        GameAnalytics.NewProgressionEvent(GAProgressionStatus.Start, 
-            $"Lvl:{_saveData.LoadInt(SaveKeyManager.LevelNumber)}",
-            $"Diff: {_saveData.LoadInt(SaveKeyManager.Difficulty)}",
-            $"Overall: {_saveData.LoadInt(SaveKeyManager.ComplitedLevelValue)}");
+        LevelNumber = _saveData.LoadInt(SaveKeyManager.LevelNumber);
+        LevelDifficulty = _saveData.LoadInt(SaveKeyManager.Difficulty);
+        LevelOverall = _saveData.LoadInt(SaveKeyManager.ComplitedLevelValue);
+        GameAnalytics.NewDesignEvent($"Level:{LevelNumber}:{LevelDifficulty}:{LevelOverall}:Start");
+        GameAnalytics.NewProgressionEvent(GAProgressionStatus.Start, LevelNumber.ToString());
+        _startTime = Time.time;
     }
 
     private void OnLevelFailEvent()
-    {
-        GameAnalytics.NewProgressionEvent(GAProgressionStatus.Fail,
-                $"Lvl:{_saveData.LoadInt(SaveKeyManager.LevelNumber)}",
-                $"Diff: {_saveData.LoadInt(SaveKeyManager.Difficulty)}",
-                $"Overall: {_saveData.LoadInt(SaveKeyManager.ComplitedLevelValue)}");
+    {        
+        GameAnalytics.NewDesignEvent($"Level:{LevelNumber}:{LevelDifficulty}:{LevelOverall}:Failed");
+        GameAnalytics.NewProgressionEvent(GAProgressionStatus.Fail, LevelNumber.ToString());
     }
 
     private void OnLevelCompleteEvent()
     {
-        GameAnalytics.NewProgressionEvent(GAProgressionStatus.Complete,
-                $"Lvl:{_saveData.LoadInt(SaveKeyManager.LevelNumber)}",
-                $"Diff: {_saveData.LoadInt(SaveKeyManager.Difficulty)}",
-                $"Overall: {_saveData.LoadInt(SaveKeyManager.ComplitedLevelValue)}");
+        GameAnalytics.NewDesignEvent($"Level:{LevelNumber}:{LevelDifficulty}:{LevelOverall}:Complete");
+        GameAnalytics.NewProgressionEvent(GAProgressionStatus.Complete, LevelNumber.ToString());
     }
     #endregion
     #region FacebookSDK
@@ -130,8 +135,7 @@ public class SDKController : BaseController
                 _currentAppKey = _ISIOSAppKey;
 #else
                 _currentAppKey = "unexpected_platform";
-#endif
-                
+#endif                
                 IronSource.Agent.validateIntegration();
                 IronSource.Agent.init(_currentAppKey, IronSourceAdUnits.REWARDED_VIDEO, IronSourceAdUnits.INTERSTITIAL, IronSourceAdUnits.OFFERWALL, IronSourceAdUnits.BANNER);
                 _isISInitialised = true;
@@ -140,6 +144,8 @@ public class SDKController : BaseController
         }
         isRewardAdvertismentEnbaled = rewardEnabled;
     }
+    
+    
 
     #endregion
 

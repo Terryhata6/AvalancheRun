@@ -35,7 +35,7 @@ public class CameraController : BaseController, IExecute, ILateExecute
 
     private void ActivateBaseCamera()
     {
-        GameEvents.Current.SetActiveCamera("BaseVirtualCamera");
+        GameEvents.Current.SetActiveCamera("45DegreeCamera");
     }
     private void ActivateStartPositionCamera()
     {
@@ -48,6 +48,7 @@ public class CameraController : BaseController, IExecute, ILateExecute
         {
             _camera = camera;
         }
+        
     }
     public void SetPursuedObject(GameObject obj)
     {

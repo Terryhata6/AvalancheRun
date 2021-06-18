@@ -174,7 +174,7 @@ public class PlayerController : BaseController, IExecute
         {
             if (_player.BombShieldReady)
             {
-               // _player.ActivateBombShield();
+                _player.ActivateBombShield();
             }
             if (_player.CanSlowTime)
             {

@@ -11,6 +11,7 @@ TagManager:
   - WarpZoneCollider
   - FinishCounter
   - Member
+  - ToHorizontalCam
   layers:
   - Default
   - TransparentFX
